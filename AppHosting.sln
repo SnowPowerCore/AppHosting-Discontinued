@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31424.327
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppHosting.Abstractions", "AppHosting.Abstractions\AppHosting.Abstractions.csproj", "{40BD187D-A1C2-4006-AADE-F0BBAD613297}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppHosting.Hosting", "AppHosting.Hosting\AppHosting.Hosting.csproj", "{62EC675A-0D19-4520-815C-7AA0894FF7D5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{40BD187D-A1C2-4006-AADE-F0BBAD613297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40BD187D-A1C2-4006-AADE-F0BBAD613297}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40BD187D-A1C2-4006-AADE-F0BBAD613297}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40BD187D-A1C2-4006-AADE-F0BBAD613297}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62EC675A-0D19-4520-815C-7AA0894FF7D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62EC675A-0D19-4520-815C-7AA0894FF7D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62EC675A-0D19-4520-815C-7AA0894FF7D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62EC675A-0D19-4520-815C-7AA0894FF7D5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {132E7B75-0559-4F6B-AFFE-78C378B2ABBF}
+	EndGlobalSection
+EndGlobal
