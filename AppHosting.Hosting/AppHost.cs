@@ -215,8 +215,10 @@ namespace AppHosting.Hosting
                 {
                     var env = context.HostingEnvironment;
 
-                    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                          .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+                    config
+                        .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)
+                        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
 
                     if (env.IsDevelopment())
                     {
