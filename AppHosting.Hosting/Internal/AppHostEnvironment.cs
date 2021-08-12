@@ -1,17 +1,17 @@
 ﻿using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using System.IO;
+using System.Reflection;
 
 namespace AppHosting.Hosting.Internal
 {
     internal class AppHostEnvironment : IHostEnvironment
     {
-        public AppHostEnvironment() { }
-
-        public string EnvironmentName { get; set; }
+        public string EnvironmentName { get; set; } =
+            Environments.Production;
 
         public string ApplicationName { get; set; } =
-            typeof(AppHostBuilder).Assembly?.GetName().Name;
+            Assembly.GetEntryAssembly()?.GetName().Name;
 
         public string ContentRootPath { get; set; } = Directory.GetCurrentDirectory();
 
