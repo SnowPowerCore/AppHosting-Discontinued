@@ -216,7 +216,7 @@ namespace AppHosting.Hosting
                     var env = context.HostingEnvironment;
 
                     config
-                        .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)
+                        .SetBasePath(Directory.GetCurrentDirectory())
                         .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                         .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
 
