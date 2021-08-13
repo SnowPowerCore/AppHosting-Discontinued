@@ -217,7 +217,7 @@ namespace AppHosting.Hosting
                     var env = context.HostingEnvironment;
 
                     config
-                        .SetFileProvider(new EmbeddedFileProvider(Assembly.GetEntryAssembly()))
+                        .SetFileProvider(new EmbeddedFileProvider(Assembly.GetCallingAssembly()))
                         .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                         .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
 
