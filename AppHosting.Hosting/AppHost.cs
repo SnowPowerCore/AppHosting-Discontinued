@@ -4,6 +4,7 @@ using AppHosting.Hosting.Extensions;
 using AppHosting.Hosting.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -216,7 +217,7 @@ namespace AppHosting.Hosting
                     var env = context.HostingEnvironment;
 
                     config
-                        .SetBasePath(Directory.GetCurrentDirectory())
+                        .SetFileProvider(new EmbeddedFileProvider(Assembly.GetEntryAssembly()))
                         .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                         .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
 
