@@ -29,7 +29,7 @@ namespace AppHosting.Xamarin.Forms.Extensions
         public static IPageBuilder AssignPageDisappearing(this IPageBuilder app) =>
             app.UseMiddleware<PageDisappearingMiddleware>();
 
-        public static IPageBuilder ProcessElements(this IPageBuilder app) =>
+        public static IPageBuilder ProcessPageElements(this IPageBuilder app) =>
             app.UseMiddleware<ProcessElementMiddleware>();
     }
 }

@@ -9,7 +9,7 @@ namespace AppHosting.Xamarin.Forms.Abstractions.Interfaces
 
         void ConfigurePage(IPageBuilder pageBuilder);
 
-        void ConfigureElement(IElementBuilder pageBuilder);
+        void ConfigureElement(IElementBuilder elementBuilder);
 
         void RegisterRoutes();
     }

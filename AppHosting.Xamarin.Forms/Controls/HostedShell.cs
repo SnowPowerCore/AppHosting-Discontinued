@@ -1,12 +1,17 @@
 ﻿using AppHosting.Xamarin.Forms.Abstractions.Interfaces.Services.Processors;
 using AppHosting.Xamarin.Forms.Extensions;
 using AsyncAwaitBestPractices;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace AppHosting.Xamarin.Forms.Controls
 {
     public class HostedShell : Shell
     {
+        private readonly List<Guid> _processedShellItems = new();
+
         private readonly IAppVisualProcessor _appVisualProcessor;
 
         private HostedShell() : base() { }
@@ -33,8 +38,12 @@ namespace AppHosting.Xamarin.Forms.Controls
                 Device
                     .InvokeOnMainThreadAsync(() =>
                     {
-                        _appVisualProcessor.PageProcessing?.Invoke(currentPage);
-                        _appVisualProcessor.ElementProcessing?.Invoke(currentPage);
+                        if (_processedShellItems.Contains(currentPage.Id))
+                            return Task.CompletedTask;
+                        var elementTask = _appVisualProcessor.ElementProcessing?.Invoke(currentPage);
+                        var pageTask = _appVisualProcessor.PageProcessing?.Invoke(currentPage);
+                        _processedShellItems.Add(currentPage.Id);
+                        return Task.WhenAll(elementTask, pageTask);
                     })
                     .SafeFireAndForget();
             }

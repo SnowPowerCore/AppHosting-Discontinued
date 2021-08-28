@@ -118,10 +118,11 @@ namespace AppHosting.Xamarin.Forms.Services.Navigation
             Device.InvokeOnMainThreadAsync(() =>
             {
                 if (_processedItems.Contains(page.Id))
-                    return;
-                _appVisualProcessor.ElementProcessing?.Invoke(page);
-                _appVisualProcessor.PageProcessing?.Invoke(page);
+                    return Task.CompletedTask;
+                var elementTask = _appVisualProcessor.ElementProcessing?.Invoke(page);
+                var pageTask = _appVisualProcessor.PageProcessing?.Invoke(page);
                 _processedItems.Add(page.Id);
+                return Task.WhenAll(elementTask, pageTask);
             });
     }
 }

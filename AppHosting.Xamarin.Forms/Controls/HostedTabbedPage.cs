@@ -1,11 +1,16 @@
 ﻿using AppHosting.Xamarin.Forms.Abstractions.Interfaces.Services.Processors;
 using AsyncAwaitBestPractices;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace AppHosting.Xamarin.Forms.Controls
 {
     public class HostedTabbedPage : TabbedPage
     {
+        private readonly List<Guid> _processedTabItems = new();
+
         private readonly IAppVisualProcessor _appVisualProcessor;
 
         private HostedTabbedPage() : base() { }
@@ -20,25 +25,20 @@ namespace AppHosting.Xamarin.Forms.Controls
             base.OnChildAdded(child);
 
             if (child is NavigationPage navigationPage)
-            {
-                Device
-                    .InvokeOnMainThreadAsync(() =>
-                    {
-                        _appVisualProcessor.PageProcessing?.Invoke(navigationPage.CurrentPage);
-                        _appVisualProcessor.ElementProcessing?.Invoke(navigationPage.CurrentPage);
-                    })
-                    .SafeFireAndForget();
-            }
+                ProcessPageAsync(navigationPage.CurrentPage).SafeFireAndForget();
             else if (child is Page page)
-            {
-                Device
-                    .InvokeOnMainThreadAsync(() =>
-                    {
-                        _appVisualProcessor.PageProcessing?.Invoke(page);
-                        _appVisualProcessor.ElementProcessing?.Invoke(page);
-                    })
-                    .SafeFireAndForget();
-            }
+                ProcessPageAsync(page).SafeFireAndForget();
         }
+
+        private Task ProcessPageAsync(Page page) =>
+            Device.InvokeOnMainThreadAsync(() =>
+            {
+                if (_processedTabItems.Contains(page.Id))
+                    return Task.CompletedTask;
+                var elementTask = _appVisualProcessor.ElementProcessing?.Invoke(page);
+                var pageTask = _appVisualProcessor.PageProcessing?.Invoke(page);
+                _processedTabItems.Add(page.Id);
+                return Task.WhenAll(elementTask, pageTask);
+            });
     }
 }

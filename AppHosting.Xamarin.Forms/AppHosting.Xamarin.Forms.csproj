@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AppHosting.Abstractions\AppHosting.Abstractions.csproj" />
     <ProjectReference Include="..\AppHosting.Xamarin.Forms.Abstractions\AppHosting.Xamarin.Forms.Abstractions.csproj" />
   </ItemGroup>
 
