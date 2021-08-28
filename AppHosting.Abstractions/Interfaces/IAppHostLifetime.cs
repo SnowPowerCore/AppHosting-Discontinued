@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
 
-namespace AppHosting.Abstractions.Internal
+namespace AppHosting.Abstractions.Interfaces
 {
     /// <summary>
     /// Allows consumers to perform cleanup during application sleep/resume.

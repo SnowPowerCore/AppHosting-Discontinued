@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using AppHosting.Hosting.Internal;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Reflection;
 
-namespace AppHosting.Hosting.Internal
+namespace AppHosting.Hosting.Extensions
 {
     internal static class AppHostingLoggerExtensions
     {

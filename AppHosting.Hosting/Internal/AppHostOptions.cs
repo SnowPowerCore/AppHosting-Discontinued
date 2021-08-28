@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.IO;
 
 namespace AppHosting.Hosting.Internal
 {
@@ -22,6 +23,8 @@ namespace AppHosting.Hosting.Internal
             ApplicationName = configuration[HostDefaults.ApplicationKey]
                 ?? typeof(AppHostOptions).Assembly.GetName().Name;
             Environment = configuration[HostDefaults.EnvironmentKey];
+            ContentRoot = configuration[HostDefaults.ContentRootKey]
+                ?? Directory.GetCurrentDirectory();
         }
     }
 }

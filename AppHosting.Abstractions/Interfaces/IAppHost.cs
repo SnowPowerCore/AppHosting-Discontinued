@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AppHosting.Abstractions
+namespace AppHosting.Abstractions.Interfaces
 {
     /// <summary>
     /// Represents a configured mobile host.

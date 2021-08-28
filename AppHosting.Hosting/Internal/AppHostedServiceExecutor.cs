@@ -1,4 +1,4 @@
-﻿using AppHosting.Abstractions.Internal;
+﻿using AppHosting.Abstractions.Interfaces;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;

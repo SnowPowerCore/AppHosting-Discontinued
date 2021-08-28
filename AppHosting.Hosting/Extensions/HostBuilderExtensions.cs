@@ -1,5 +1,5 @@
-﻿using AppHosting.Abstractions;
-using AppHosting.Abstractions.Internal;
+﻿using AppHosting.Abstractions.Interfaces;
+using AppHosting.Xamarin.Forms.Abstractions.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

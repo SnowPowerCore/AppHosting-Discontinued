@@ -1,4 +1,5 @@
-﻿using AppHosting.Abstractions.Internal;
+﻿using AppHosting.Abstractions.Interfaces;
+using AppHosting.Hosting.Extensions;
 using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Logging;
 using System;

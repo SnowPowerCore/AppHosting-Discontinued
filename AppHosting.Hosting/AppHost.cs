@@ -1,7 +1,7 @@
-﻿using AppHosting.Abstractions;
-using AppHosting.Abstractions.Internal;
+﻿using AppHosting.Abstractions.Interfaces;
 using AppHosting.Hosting.Extensions;
 using AppHosting.Hosting.Internal;
+using AppHosting.Xamarin.Forms.Abstractions.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -10,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -49,6 +48,7 @@ namespace AppHosting.Hosting
         {
             _hostingStartupErrors = hostingStartupErrors;
             _options = options;
+
             _applicationServiceCollection = appServices ?? throw new ArgumentNullException(nameof(appServices));
             _hostingServiceProvider = hostingServiceProvider ?? throw new ArgumentNullException(nameof(hostingServiceProvider));
             _applicationServiceCollection.AddSingleton<IAppHostLifetime, AppHostLifetime>();
@@ -80,8 +80,8 @@ namespace AppHosting.Hosting
             if (_applicationServices == null)
             {
                 EnsureStartup();
-                _applicationServices = _startup
-                    .ConfigureServices(_applicationServiceCollection);
+                _startup.ConfigureServices(_applicationServiceCollection);
+                _applicationServices = _applicationServiceCollection.BuildServiceProvider();
                 _startup.RegisterRoutes();
             }
         }
@@ -194,11 +194,14 @@ namespace AppHosting.Hosting
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="IAppHostBuilder"/> class with pre-configured defaults.
+        /// Initializes a new instance of the <see cref="IAppHostBuilder"/> class with
+        /// pre-configured defaults. Also processes the startup class.
         /// </summary>
         /// <returns>The initialized <see cref="IAppHostBuilder>"/>.</returns>
-        public static IAppHostBuilder CreateDefaultAppBuilder(string[] args)
+        public static IAppHostBuilder CreateDefaultAppBuilder<TStartup>(string[] args)
+            where TStartup : class
         {
+            var assembly = typeof(TStartup).Assembly;
             var builder = new AppHostBuilder();
 
             if (string.IsNullOrEmpty(builder.GetSetting(HostDefaults.ContentRootKey)))
@@ -217,17 +220,13 @@ namespace AppHosting.Hosting
                     var env = context.HostingEnvironment;
 
                     config
-                        .SetFileProvider(new EmbeddedFileProvider(Assembly.GetCallingAssembly()))
+                        .SetFileProvider(new EmbeddedFileProvider(assembly))
                         .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+                        .AddJsonFile($"appsettings.{ env.EnvironmentName }.json", optional: true, reloadOnChange: true);
 
                     if (env.IsDevelopment())
                     {
-                        var appAssembly = Assembly.Load(new AssemblyName(env.ApplicationName));
-                        if (appAssembly != null)
-                        {
-                            config.AddUserSecrets(appAssembly, optional: true);
-                        }
+                        config.AddUserSecrets(assembly, optional: true);
                     }
 
                     config.AddEnvironmentVariables();
@@ -251,6 +250,8 @@ namespace AppHosting.Hosting
                     options.ValidateScopes = isDevelopment;
                     options.ValidateOnBuild = isDevelopment;
                 });
+
+            builder.UseStartup<TStartup>();
 
             return builder;
         }

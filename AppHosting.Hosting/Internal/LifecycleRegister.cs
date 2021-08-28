@@ -1,4 +1,4 @@
-﻿using AppHosting.Abstractions.Internal;
+﻿using AppHosting.Abstractions.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -6,8 +6,7 @@ namespace AppHosting.Hosting.Internal
 {
     internal class LifecycleRegister : ILifecycleRegister
     {
-        private readonly HashSet<Action> _callbacks =
-            new HashSet<Action>();
+        private readonly HashSet<Action> _callbacks = new();
 
         public void Register(Action callback) =>
             _callbacks.Add(callback);

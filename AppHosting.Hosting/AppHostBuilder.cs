@@ -1,7 +1,7 @@
-﻿using AppHosting.Abstractions;
-using AppHosting.Abstractions.Internal;
+﻿using AppHosting.Abstractions.Interfaces;
 using AppHosting.Hosting.Extensions;
 using AppHosting.Hosting.Internal;
+using AppHosting.Xamarin.Forms.Abstractions.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 
@@ -21,7 +22,7 @@ namespace AppHosting.Hosting
         private readonly IConfiguration _config;
 
         private AppHostOptions? _options;
-        private IHostEnvironment? _hostingEnvironment = new AppHostEnvironment();
+        private IHostEnvironment? _hostingEnvironment;
         private HostBuilderContext? _context;
         private bool _mobileHostBuilt;
         private Action<HostBuilderContext, IServiceCollection>? _configureServices;
@@ -34,6 +35,20 @@ namespace AppHosting.Hosting
             _config = new ConfigurationBuilder()
                 .AddEnvironmentVariables(prefix: "XAMARIN_")
                 .Build();
+
+            if (string.IsNullOrEmpty(GetSetting(HostDefaults.EnvironmentKey)))
+            {
+                // Try adding legacy environment keys, never remove these.
+                UseSetting(HostDefaults.EnvironmentKey,
+                    Environment.GetEnvironmentVariable("Hosting:Environment")
+                        ?? Environment.GetEnvironmentVariable("XAMARIN_ENVIRONMENT")
+                        ?? AppRuntimeConfiguration.CompilationMode);
+            }
+
+            _context = new HostBuilderContext(Properties)
+            {
+                Configuration = _config
+            };
         }
 
         /// <summary>
@@ -159,6 +174,11 @@ namespace AppHosting.Hosting
 
             _options = new AppHostOptions(_config);
 
+            var contentRootPath = ResolveContentRootPath(_options.ContentRoot, AppContext.BaseDirectory);
+
+            _hostingEnvironment.Initialize(contentRootPath, _options);
+            _context.HostingEnvironment = _hostingEnvironment;
+
             var services = new ServiceCollection();
 
             services
@@ -227,6 +247,19 @@ namespace AppHosting.Hosting
             var listener = hostingServiceProvider.GetService<DiagnosticListener>();
             services.Replace(ServiceDescriptor.Singleton(typeof(DiagnosticListener), listener!));
             services.Replace(ServiceDescriptor.Singleton(typeof(DiagnosticSource), listener!));
+        }
+
+        private string ResolveContentRootPath(string contentRootPath, string basePath)
+        {
+            if (string.IsNullOrEmpty(contentRootPath))
+            {
+                return basePath;
+            }
+            if (Path.IsPathRooted(contentRootPath))
+            {
+                return contentRootPath;
+            }
+            return Path.Combine(Path.GetFullPath(basePath), contentRootPath);
         }
     }
 #nullable disable

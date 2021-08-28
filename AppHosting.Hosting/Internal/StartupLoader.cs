@@ -49,7 +49,8 @@ namespace AppHosting.Hosting.Internal
 
             if (type == default)
             {
-                throw new InvalidOperationException(string.Format("A type named '{0}' or '{1}' could not be found in assembly '{2}'.",
+                throw new InvalidOperationException(
+                    string.Format("A type named '{0}' or '{1}' could not be found in assembly '{2}'.",
                     startupNameWithEnv,
                     startupNameWithoutEnv,
                     startupAssemblyName));

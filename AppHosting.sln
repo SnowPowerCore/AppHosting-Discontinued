@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppHosting.Abstractions", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppHosting.Hosting", "AppHosting.Hosting\AppHosting.Hosting.csproj", "{62EC675A-0D19-4520-815C-7AA0894FF7D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppHosting.Xamarin.Forms", "AppHosting.Xamarin.Forms\AppHosting.Xamarin.Forms.csproj", "{714B9B01-0C07-48F1-BB86-242128C2F21E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppHosting.Xamarin.Forms.Abstractions", "AppHosting.Xamarin.Forms.Abstractions\AppHosting.Xamarin.Forms.Abstractions.csproj", "{CC7389CE-6BEC-4BD3-83B1-2F46E32E413D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{62EC675A-0D19-4520-815C-7AA0894FF7D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62EC675A-0D19-4520-815C-7AA0894FF7D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62EC675A-0D19-4520-815C-7AA0894FF7D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{714B9B01-0C07-48F1-BB86-242128C2F21E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{714B9B01-0C07-48F1-BB86-242128C2F21E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{714B9B01-0C07-48F1-BB86-242128C2F21E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{714B9B01-0C07-48F1-BB86-242128C2F21E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC7389CE-6BEC-4BD3-83B1-2F46E32E413D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC7389CE-6BEC-4BD3-83B1-2F46E32E413D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC7389CE-6BEC-4BD3-83B1-2F46E32E413D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC7389CE-6BEC-4BD3-83B1-2F46E32E413D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
