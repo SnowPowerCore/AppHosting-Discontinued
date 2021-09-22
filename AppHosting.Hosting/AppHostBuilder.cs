@@ -41,8 +41,7 @@ namespace AppHosting.Hosting
                 // Try adding legacy environment keys, never remove these.
                 UseSetting(HostDefaults.EnvironmentKey,
                     Environment.GetEnvironmentVariable("Hosting:Environment")
-                        ?? Environment.GetEnvironmentVariable("XAMARIN_ENVIRONMENT")
-                        ?? AppRuntimeConfiguration.CompilationMode);
+                        ?? Environment.GetEnvironmentVariable("XAMARIN_ENVIRONMENT"));
             }
 
             _context = new HostBuilderContext(Properties)

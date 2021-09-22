@@ -36,9 +36,7 @@ namespace AppHosting.Hosting.Extensions
             hostingEnvironment.ContentRootFileProvider = new PhysicalFileProvider(
                 hostingEnvironment.ContentRootPath);
 
-            hostingEnvironment.EnvironmentName =
-                options.Environment ??
-                hostingEnvironment.EnvironmentName;
+            hostingEnvironment.EnvironmentName ??= options.Environment;
         }
     }
 }

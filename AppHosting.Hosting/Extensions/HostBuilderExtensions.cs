@@ -115,5 +115,19 @@ namespace AppHosting.Hosting.Extensions
 
             return hostBuilder.UseSetting(HostDefaults.ContentRootKey, contentRoot);
         }
+
+        /// <summary>
+        /// Specify the environment to be used by the app host.
+        /// </summary>
+        /// <param name="hostBuilder">The <see cref="IAppHostBuilder"/> to configure.</param>
+        /// <param name="contentRoot">Path to root directory of the application.</param>
+        /// <returns>The <see cref="IAppHostBuilder"/>.</returns>
+        public static IAppHostBuilder UseEnvironment(this IAppHostBuilder hostBuilder, string environmentName)
+        {
+            if (string.IsNullOrEmpty(environmentName))
+                throw new ArgumentNullException(nameof(environmentName));
+
+            return hostBuilder.UseSetting(HostDefaults.EnvironmentKey, environmentName);
+        }
     }
 }

@@ -8,7 +8,7 @@
     <LangVersion>9.0</LangVersion>
     <AssemblyName>AppHosting.Abstractions</AssemblyName>
     <RootNamespace>AppHosting.Abstractions</RootNamespace>
-    <Version>0.0.7</Version>
+    <Version>0.0.7.2</Version>
     <Authors>Nikita</Authors>
     <Product />
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -16,7 +16,7 @@
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl>https://github.com/SnowPowerCore/AppHosting</RepositoryUrl>
     <PackageTags>generic,host,xamarin,xf,forms,xamarin.forms,xamarinforms,hosting,di,ioc,dependency,inject,hostbuilder,maui,dotnet,crossplatform,cross-platform,asp.net,aspnet,core,aspnetcore</PackageTags>
-    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <PackageReleaseNotes>Fix for environment setting</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

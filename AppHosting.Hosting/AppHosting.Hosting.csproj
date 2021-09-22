@@ -8,19 +8,19 @@
     <LangVersion>9.0</LangVersion>
     <AssemblyName>AppHosting.Hosting</AssemblyName>
     <RootNamespace>AppHosting.Hosting</RootNamespace>
-    <Version>0.0.7</Version>
+    <Version>0.0.7.2</Version>
     <Authors>Nikita</Authors>
     <Description>Closest ASP.NET Core implementation for Xamarin.Forms
 Please, head to the project's repository for wiki.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/SnowPowerCore/AppHosting</RepositoryUrl>
     <PackageTags>generic,host,xamarin,xf,forms,xamarin.forms,xamarinforms,hosting,di,ioc,dependency,inject,hostbuilder,maui,dotnet,crossplatform,cross-platform,asp.net,aspnet,core,aspnetcore</PackageTags>
-    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <PackageReleaseNotes>Fix for environment setting</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AppHosting.Abstractions" Version="0.0.7" />
-    <PackageReference Include="AppHosting.Xamarin.Forms.Abstractions" Version="0.0.7" />
+    <PackageReference Include="AppHosting.Abstractions" Version="0.0.7.2" />
+    <PackageReference Include="AppHosting.Xamarin.Forms.Abstractions" Version="0.0.7.2" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="5.0.9" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
   </ItemGroup>
