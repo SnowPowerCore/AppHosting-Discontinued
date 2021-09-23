@@ -8,7 +8,7 @@
     <LangVersion>9.0</LangVersion>
     <AssemblyName>AppHosting.Abstractions</AssemblyName>
     <RootNamespace>AppHosting.Abstractions</RootNamespace>
-    <Version>0.0.7.2</Version>
+    <Version>0.0.7.3</Version>
     <Authors>Nikita</Authors>
     <Product />
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

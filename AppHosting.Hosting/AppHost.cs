@@ -10,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -213,7 +212,7 @@ namespace AppHosting.Hosting
 
             if (string.IsNullOrEmpty(builder.GetSetting(HostDefaults.EnvironmentKey)))
             {
-                builder.UseEnvironment(assembly.GetCustomAttributes().FirstOrDefault(x => x is AssemblyConfigurationAttribute)?.ToString());
+                builder.UseEnvironment(((AssemblyConfigurationAttribute)assembly.GetCustomAttribute(typeof(AssemblyConfigurationAttribute)))?.Configuration);
             }
 
             if (args != null)
