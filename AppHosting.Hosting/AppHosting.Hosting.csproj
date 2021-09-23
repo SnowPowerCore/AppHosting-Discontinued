@@ -19,7 +19,7 @@ Please, head to the project's repository for wiki.</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AppHosting.Abstractions" Version="0.0.7.2" />
+    <PackageReference Include="AppHosting.Abstractions" Version="0.0.7.3" />
     <PackageReference Include="AppHosting.Xamarin.Forms.Abstractions" Version="0.0.7.3" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="5.0.9" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />

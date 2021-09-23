@@ -18,7 +18,7 @@ Please, head to the project's repository for wiki.</Description>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AppHosting.Abstractions" Version="0.0.7.2" />
+    <PackageReference Include="AppHosting.Abstractions" Version="0.0.7.3" />
     <PackageReference Include="AppHosting.Xamarin.Forms.Abstractions" Version="0.0.7.3" />
     <PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="6.0.0" />
     <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.12" />
