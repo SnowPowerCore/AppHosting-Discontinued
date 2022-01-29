@@ -1,5 +1,5 @@
 # AppHosting
-AppHosting is a closest ASP.NET Core implementation for Xamarin.Forms built to deliver better architecture for your application.
+A closest ASP.NET Core implementation for Xamarin.Forms built to deliver better architecture for your application.
 
 Visit the [wiki](https://github.com/SnowPowerCore/AppHosting/wiki) for step-by-step introduction and features description.
 
