@@ -26,23 +26,21 @@ namespace AppHosting.Xamarin.Forms.Middleware
             var childrenBindingContexts = bindingContextAttrs
                 .Where(x => !string.IsNullOrEmpty(x.ControlName));
 
-            _ = childrenBindingContexts.Select(x =>
+            foreach (var childrenBindingContext in childrenBindingContexts)
             {
-                var field = xfElementType.GetField(x.ControlName,
-                    BindingFlags.NonPublic | BindingFlags.Instance);
+                var field = xfElementType.GetField(childrenBindingContext.ControlName,
+                       BindingFlags.NonPublic | BindingFlags.Instance);
 
                 if (field is default(FieldInfo))
-                    return default;
+                    continue;
 
                 if (field.FieldType.IsSubclassOf(typeof(BindableObject)))
                 {
                     var bindableObj = (BindableObject)field.GetValue(element);
-                    var bindingContext = _services.GetService(x.BindingContextType);
+                    var bindingContext = _services.GetService(childrenBindingContext.BindingContextType);
                     bindableObj.BindingContext = bindingContext;
                 }
-
-                return x;
-            });
+            }
 
             return next(element);
         }
