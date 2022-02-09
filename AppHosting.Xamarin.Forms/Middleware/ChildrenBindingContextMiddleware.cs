@@ -37,8 +37,7 @@ namespace AppHosting.Xamarin.Forms.Middleware
                 if (field.FieldType.IsSubclassOf(typeof(BindableObject)))
                 {
                     var bindableObj = (BindableObject)field.GetValue(element);
-                    var bindingContext = _services.GetService(childrenBindingContext.BindingContextType);
-                    bindableObj.BindingContext = bindingContext;
+                    bindableObj.BindingContext = _services.GetService(childrenBindingContext.BindingContextType);
                 }
             }
 
