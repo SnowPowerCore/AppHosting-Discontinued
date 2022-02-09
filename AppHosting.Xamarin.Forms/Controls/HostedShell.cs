@@ -41,9 +41,11 @@ namespace AppHosting.Xamarin.Forms.Controls
                         if (_processedShellItems.Contains(currentPage.Id))
                             return Task.CompletedTask;
                         var elementTask = _appVisualProcessor.ElementProcessing?.Invoke(currentPage);
-                        var pageTask = _appVisualProcessor.PageProcessing?.Invoke(currentPage);
+                        var pageTask = elementTask
+                            .ContinueWith(t => _appVisualProcessor.PageProcessing?.Invoke(currentPage),
+                                TaskContinuationOptions.OnlyOnRanToCompletion);
                         _processedShellItems.Add(currentPage.Id);
-                        return Task.WhenAll(elementTask, pageTask);
+                        return pageTask.Unwrap();
                     })
                     .SafeFireAndForget();
             }

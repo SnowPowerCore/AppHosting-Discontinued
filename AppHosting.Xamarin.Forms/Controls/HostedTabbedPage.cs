@@ -36,9 +36,11 @@ namespace AppHosting.Xamarin.Forms.Controls
                 if (_processedTabItems.Contains(page.Id))
                     return Task.CompletedTask;
                 var elementTask = _appVisualProcessor.ElementProcessing?.Invoke(page);
-                var pageTask = _appVisualProcessor.PageProcessing?.Invoke(page);
+                var pageTask = elementTask
+                    .ContinueWith(t => _appVisualProcessor.PageProcessing?.Invoke(page),
+                        TaskContinuationOptions.OnlyOnRanToCompletion);
                 _processedTabItems.Add(page.Id);
-                return Task.WhenAll(elementTask, pageTask);
+                return pageTask.Unwrap();
             });
     }
 }
