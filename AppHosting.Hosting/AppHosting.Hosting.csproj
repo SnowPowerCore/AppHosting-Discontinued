@@ -8,7 +8,7 @@
     <LangVersion>9.0</LangVersion>
     <AssemblyName>AppHosting.Hosting</AssemblyName>
     <RootNamespace>AppHosting.Hosting</RootNamespace>
-    <Version>0.0.8.0</Version>
+    <Version>0.0.8.1</Version>
     <Authors>Nikita</Authors>
     <Description>Closest ASP.NET Core implementation for Xamarin.Forms
 Please, head to the project's repository for wiki.</Description>
