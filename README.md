@@ -33,3 +33,6 @@ Big appreciation and honor to the following creators and their masterpieces:
 
 # License
 Visit the [LICENSE.md](https://github.com/SnowPowerCore/AppHosting/blob/main/LICENSE.md) file.
+
+# Stats
+![Alt](https://repobeats.axiom.co/api/embed/4dd436b50c18b056556499b5fda3dd0ffdbe01cd.svg "Repobeats analytics image")
