@@ -20,8 +20,14 @@ namespace AppHosting.Xamarin.Forms.Extensions
         public static IElementBuilder AssignAttachedCommands(this IElementBuilder app) =>
             app.UseMiddleware<AttachedCommandMiddleware>();
 
+        public static IElementBuilder AssignAttachedLongPressCommands(this IElementBuilder app) =>
+            app.UseMiddleware<AttachedLongPressCommandMiddleware>();
+
         public static IElementBuilder AssignAttachedAsyncCommands(this IElementBuilder app) =>
             app.UseMiddleware<AttachedAsyncCommandMiddleware>();
+
+        public static IElementBuilder AssignAttachedAsyncLongPressCommands(this IElementBuilder app) =>
+            app.UseMiddleware<AttachedAsyncLongPressCommandMiddleware>();
 
         public static IPageBuilder AssignPageAppearing(this IPageBuilder app) =>
             app.UseMiddleware<PageAppearingMiddleware>();

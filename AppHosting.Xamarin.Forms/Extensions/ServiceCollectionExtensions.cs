@@ -16,6 +16,8 @@ namespace AppHosting.Xamarin.Forms.Extensions
             services.AddSingleton<AsyncCommandMiddleware>();
             services.AddSingleton<AttachedCommandMiddleware>();
             services.AddSingleton<AttachedAsyncCommandMiddleware>();
+            services.AddSingleton<AttachedLongPressCommandMiddleware>();
+            services.AddSingleton<AttachedAsyncLongPressCommandMiddleware>();
             return services;
         }
     }

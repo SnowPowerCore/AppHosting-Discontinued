@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using NavigationEventArgs = AppHosting.Xamarin.Forms.Abstractions.EventArgs.NavigationEventArgs;
 
 namespace AppHosting.Xamarin.Forms.Services.Navigation
 {
@@ -18,6 +19,16 @@ namespace AppHosting.Xamarin.Forms.Services.Navigation
 
         private readonly IServiceProvider _serviceProvider;
         private readonly IAppVisualProcessor _appVisualProcessor;
+
+        public event EventHandler<NavigationEventArgs> PageNavigating;
+        public event EventHandler<NavigationEventArgs> PopupNavigating;
+        public event EventHandler<NavigationEventArgs> ModalNavigating;
+
+        public IReadOnlyList<Page> Pages => Application.Current.MainPage.Navigation.NavigationStack;
+
+        public IReadOnlyList<PopupPage> PopupPages => PopupNavigation.Instance.PopupStack;
+
+        public IReadOnlyList<Page> Modals => Application.Current.MainPage.Navigation.ModalStack;
 
         public LegacyTabbedNavigationService(IServiceProvider serviceProvider,
                                              IAppVisualProcessor appVisualProcessor)
@@ -54,10 +65,23 @@ namespace AppHosting.Xamarin.Forms.Services.Navigation
         {
             if (modal is Page xfModal)
             {
-                ProcessPageAsync(xfModal).SafeFireAndForget();
-                return Device.InvokeOnMainThreadAsync(
-                    () => Application.Current.MainPage.Navigation.PushModalAsync(
-                        xfModal, animated));
+                var navigatingArgs = new NavigationEventArgs
+                {
+                    Cancel = false,
+                    NavigationPageType = typeof(TPage)
+                };
+                ModalNavigating?.Invoke(this, navigatingArgs);
+                if (!navigatingArgs.Cancel)
+                {
+                    ProcessPageAsync(xfModal).SafeFireAndForget();
+                    return Device.InvokeOnMainThreadAsync(
+                        () => Application.Current.MainPage.Navigation.PushModalAsync(
+                            xfModal, animated));
+                }
+                else
+                {
+                    return Task.CompletedTask;
+                }
             }
             return Task.CompletedTask;
         }
@@ -71,9 +95,22 @@ namespace AppHosting.Xamarin.Forms.Services.Navigation
         public Task OpenPopupAsync(string routeWithParams, bool animated = true)
         {
             var popupPage = routeWithParams.GetElementFromRouting<PopupPage>();
-            ProcessPageAsync(popupPage).SafeFireAndForget();
-            return Device.InvokeOnMainThreadAsync(
-                () => PopupNavigation.Instance.PushAsync(popupPage, animated));
+            var navigatingArgs = new NavigationEventArgs
+            {
+                Cancel = false,
+                NavigationPageType = popupPage.GetType()
+            };
+            PopupNavigating?.Invoke(this, navigatingArgs);
+            if (!navigatingArgs.Cancel)
+            {
+                ProcessPageAsync(popupPage).SafeFireAndForget();
+                return Device.InvokeOnMainThreadAsync(
+                    () => PopupNavigation.Instance.PushAsync(popupPage, animated));
+            }
+            else
+            {
+                return Task.CompletedTask;
+            }
         }
 
         public Task ClosePopupAsync(bool animated = true) =>
@@ -85,9 +122,22 @@ namespace AppHosting.Xamarin.Forms.Services.Navigation
         {
             var tabbedPage = (TabbedPage)Application.Current.MainPage;
             var page = routeWithParams.GetElementFromRouting<Page>();
-            ProcessPageAsync(page).SafeFireAndForget();
-            return Device.InvokeOnMainThreadAsync(
-                () => tabbedPage.CurrentPage.Navigation.PushAsync(page, animated));
+            var navigatingArgs = new NavigationEventArgs
+            {
+                Cancel = false,
+                NavigationPageType = page.GetType()
+            };
+            PageNavigating?.Invoke(this, navigatingArgs);
+            if (!navigatingArgs.Cancel)
+            {
+                ProcessPageAsync(page).SafeFireAndForget();
+                return Device.InvokeOnMainThreadAsync(
+                    () => tabbedPage.CurrentPage.Navigation.PushAsync(page, animated));
+            }
+            else
+            {
+                return Task.CompletedTask;
+            }
         }
 
         public Task NavigateBackAsync(bool animated = true)

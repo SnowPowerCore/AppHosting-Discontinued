@@ -1,4 +1,4 @@
-﻿namespace System.Runtime.CompilerServices
+﻿namespace AppHosting.Xamarin.Forms.Properties
 {
     public class IsExternalInit { }
 }

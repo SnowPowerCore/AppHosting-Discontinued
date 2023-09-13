@@ -18,18 +18,30 @@ namespace AppHosting.Xamarin.Forms.Attributes
 
         public string CommandObjectName { get; }
 
+        public bool NativeAnimation { get; }
+
+        public int HoveredAnimationDuration { get; }
+
+        public int NormalAnimationDuration { get; }
+
         public CommandAttribute(
             string commandDelegateName,
             string commandName = "Command",
             string controlName = "",
             string commandObjectName = "",
-            string commandCanExecuteDelegateName = "")
+            string commandCanExecuteDelegateName = "",
+            bool nativeAnimation = false,
+            int hoveredAnimationDuration = 500,
+            int normalAnimationDuration = 100)
         {
             ControlName = controlName;
             CommandDelegateName = commandDelegateName;
             CommandName = commandName;
             CommandObjectName = commandObjectName;
             CommandCanExecuteDelegateName = commandCanExecuteDelegateName;
+            NativeAnimation = nativeAnimation;
+            HoveredAnimationDuration = hoveredAnimationDuration;
+            NormalAnimationDuration = normalAnimationDuration;
         }
     }
 
@@ -43,12 +55,51 @@ namespace AppHosting.Xamarin.Forms.Attributes
             string commandDelegateName,
             string controlName = "",
             string commandObjectName = "",
-            string commandCanExecuteDelegateName = "")
+            string commandCanExecuteDelegateName = "",
+            bool nativeAnimation = false,
+            int hoveredAnimationDuration = 500,
+            int normalAnimationDuration = 100)
             : base(commandDelegateName,
                    controlName: controlName,
                    commandObjectName: commandObjectName,
-                   commandCanExecuteDelegateName: commandCanExecuteDelegateName)
+                   commandCanExecuteDelegateName: commandCanExecuteDelegateName,
+                   nativeAnimation: nativeAnimation,
+                   hoveredAnimationDuration: hoveredAnimationDuration,
+                   normalAnimationDuration: normalAnimationDuration)
         { }
+    }
+
+    /// <summary>
+    /// Please, use it on a page class. You can consume this multiple times.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+    public class AttachedLongPressCommandAttribute : CommandAttribute
+    {
+        public int LongPressDuration { get; }
+
+        public int PressedAnimationDuration { get; }
+
+        public AttachedLongPressCommandAttribute(
+            string commandDelegateName,
+            int longPressDuration = 500,
+            string controlName = "",
+            string commandObjectName = "",
+            string commandCanExecuteDelegateName = "",
+            bool nativeAnimation = false,
+            int hoveredAnimationDuration = 500,
+            int normalAnimationDuration = 100,
+            int pressedAnimationDuration = 100)
+            : base(commandDelegateName,
+                   controlName: controlName,
+                   commandObjectName: commandObjectName,
+                   commandCanExecuteDelegateName: commandCanExecuteDelegateName,
+                   nativeAnimation: nativeAnimation,
+                   hoveredAnimationDuration: hoveredAnimationDuration,
+                   normalAnimationDuration: normalAnimationDuration)
+        {
+            LongPressDuration = longPressDuration;
+            PressedAnimationDuration = pressedAnimationDuration;
+        }
     }
 
     /// <summary>
@@ -68,9 +119,15 @@ namespace AppHosting.Xamarin.Forms.Attributes
             string commandObjectName = "",
             string commandCanExecuteDelegateName = "",
             bool continueOnCapturedContext = false,
-            string onException = "")
+            string onException = "",
+            bool nativeAnimation = false,
+            int hoveredAnimationDuration = 500,
+            int normalAnimationDuration = 100)
             : base(commandTaskName, commandName, controlName,
-                  commandObjectName, commandCanExecuteDelegateName)
+                   commandObjectName, commandCanExecuteDelegateName,
+                   nativeAnimation: nativeAnimation,
+                   hoveredAnimationDuration: hoveredAnimationDuration,
+                   normalAnimationDuration: normalAnimationDuration)
         {
             ContinueOnCapturedContext = continueOnCapturedContext;
             OnException = onException;
@@ -89,13 +146,56 @@ namespace AppHosting.Xamarin.Forms.Attributes
             string commandObjectName = "",
             string commandCanExecuteDelegateName = "",
             bool continueOnCapturedContext = false,
-            string onException = "")
+            string onException = "",
+            bool nativeAnimation = false,
+            int hoveredAnimationDuration = 500,
+            int normalAnimationDuration = 100)
             : base(commandTaskName,
                    controlName: controlName,
                    commandObjectName: commandObjectName,
                    commandCanExecuteDelegateName: commandCanExecuteDelegateName,
                    continueOnCapturedContext: continueOnCapturedContext,
-                   onException: onException)
+                   onException: onException,
+                   nativeAnimation: nativeAnimation,
+                   hoveredAnimationDuration: hoveredAnimationDuration,
+                   normalAnimationDuration: normalAnimationDuration)
         { }
+    }
+
+    /// <summary>
+    /// Please, use it on a page class. You can consume this multiple times.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+    public class AttachedAsyncLongPressCommandAttribute : AsyncCommandAttribute
+    {
+        public int LongPressDuration { get; }
+
+        public int PressedAnimationDuration { get; }
+
+        public AttachedAsyncLongPressCommandAttribute(
+            string commandTaskName,
+            int longPressDuration = 500,
+            string controlName = "",
+            string commandObjectName = "",
+            string commandCanExecuteDelegateName = "",
+            bool continueOnCapturedContext = false,
+            string onException = "",
+            bool nativeAnimation = false,
+            int hoveredAnimationDuration = 500,
+            int normalAnimationDuration = 100,
+            int pressedAnimationDuration = 100)
+            : base(commandTaskName,
+                   controlName: controlName,
+                   commandObjectName: commandObjectName,
+                   commandCanExecuteDelegateName: commandCanExecuteDelegateName,
+                   continueOnCapturedContext: continueOnCapturedContext,
+                   onException: onException,
+                   nativeAnimation: nativeAnimation,
+                   hoveredAnimationDuration: hoveredAnimationDuration,
+                   normalAnimationDuration: normalAnimationDuration)
+        {
+            LongPressDuration = longPressDuration;
+            PressedAnimationDuration = pressedAnimationDuration;
+        }
     }
 }

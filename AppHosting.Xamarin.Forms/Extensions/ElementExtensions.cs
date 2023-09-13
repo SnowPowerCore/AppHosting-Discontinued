@@ -1,11 +1,10 @@
 ﻿using AppHosting.Xamarin.Forms.Attributes;
+using AppHosting.Xamarin.Forms.Shared.Utils.Touch;
 using AppHosting.Xamarin.Forms.Utils.Commands;
 using System;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using XamEffects;
 
 namespace AppHosting.Xamarin.Forms.Extensions
 {
@@ -38,6 +37,33 @@ namespace AppHosting.Xamarin.Forms.Extensions
             return xfElement;
         }
 
+        public static Element AddAttachedLongPressCommands(
+            this Element xfElement,
+            AttachedLongPressCommandAttribute[] commandAttrs,
+            object differentBindingContext = default)
+        {
+            foreach (var commandAttr in commandAttrs)
+            {
+                if (string.IsNullOrEmpty(commandAttr.CommandDelegateName))
+                    continue;
+
+                var desiredControl = xfElement.GetControlData(commandAttr.ControlName,
+                    out _, out var bindingContextType);
+
+                bindingContextType ??= differentBindingContext?.GetType();
+
+                AssignAttachedLongPressCommandParameter(
+                    desiredControl, xfElement.BindingContext ?? differentBindingContext,
+                    commandAttr);
+
+                AssignAttachedLongPressCommand(
+                    desiredControl, xfElement.BindingContext ?? differentBindingContext,
+                    bindingContextType,
+                    commandAttr);
+            }
+            return xfElement;
+        }
+
         public static Element AddAttachedAsyncCommands(
             this Element xfElement,
             AttachedAsyncCommandAttribute[] commandAttrs,
@@ -58,6 +84,33 @@ namespace AppHosting.Xamarin.Forms.Extensions
                     commandAttr);
 
                 AssignAttachedAsyncCommand(
+                    desiredControl, xfElement.BindingContext ?? differentBindingContext,
+                    bindingContextType,
+                    commandAttr);
+            }
+            return xfElement;
+        }
+
+        public static Element AddAttachedAsyncLongPressCommands(
+            this Element xfElement,
+            AttachedAsyncLongPressCommandAttribute[] commandAttrs,
+            object differentBindingContext = default)
+        {
+            foreach (var commandAttr in commandAttrs)
+            {
+                if (string.IsNullOrEmpty(commandAttr.CommandDelegateName))
+                    continue;
+
+                var desiredControl = xfElement.GetControlData(commandAttr.ControlName,
+                    out _, out var bindingContextType);
+
+                bindingContextType ??= differentBindingContext?.GetType();
+
+                AssignAttachedLongPressCommandParameter(
+                    desiredControl, xfElement.BindingContext ?? differentBindingContext,
+                    commandAttr);
+
+                AssignAttachedAsyncLongPressCommand(
                     desiredControl, xfElement.BindingContext ?? differentBindingContext,
                     bindingContextType,
                     commandAttr);
@@ -127,14 +180,28 @@ namespace AppHosting.Xamarin.Forms.Extensions
                     BindingMode.TwoWay,
                     source: bindingContext);
 
-                control.SetBinding(Commands.TapParameterProperty, binding);
+                control.SetBinding(TouchEffect.CommandParameterProperty, binding);
+            }
+        }
+
+        private static void AssignAttachedLongPressCommandParameter(
+            BindableObject control, object bindingContext, CommandAttribute commandAttr)
+        {
+            if (!string.IsNullOrEmpty(commandAttr.CommandObjectName))
+            {
+                var binding = new Binding(
+                    commandAttr.CommandObjectName,
+                    BindingMode.TwoWay,
+                    source: bindingContext);
+
+                control.SetBinding(TouchEffect.LongPressCommandParameterProperty, binding);
             }
         }
 
         private static void AssignCommandParameter(
             BindableObject control, Type controlType, Type bindingContextType, CommandAttribute commandAttr)
         {
-            if (controlType.GetProperty("CommandParameter") is PropertyInfo)
+            if (controlType.GetProperty("CommandParameter") is not null)
             {
                 var @object = bindingContextType
                     .GetProperty(commandAttr.CommandObjectName);
@@ -160,14 +227,42 @@ namespace AppHosting.Xamarin.Forms.Extensions
                 .GetMethod(commandAttr.CommandCanExecuteDelegateName);
 
             var command = new RelayCommand<object>(
-                obj => _ = method.GetParameters().Count() <= 0
+                obj => _ = method.GetParameters().Length <= 0
                     ? method.Invoke(bindingContext, new object[] { })
                     : method.Invoke(bindingContext, new object[] { obj }),
-                () => canExecuteMethod != default
-                    ? (bool)canExecuteMethod.Invoke(bindingContext, new object[0])
-                    : true);
+                () => canExecuteMethod == default
+                    || (bool)canExecuteMethod.Invoke(bindingContext, new object[0]));
 
-            Commands.SetTap(control, command);
+            TouchEffect.SetCommand(control, command);
+            TouchEffect.SetNativeAnimation(control, commandAttr.NativeAnimation);
+            TouchEffect.SetHoveredAnimationDuration(control, commandAttr.HoveredAnimationDuration);
+            TouchEffect.SetNormalAnimationDuration(control, commandAttr.NormalAnimationDuration);
+        }
+
+        private static void AssignAttachedLongPressCommand(
+            BindableObject control, object bindingContext,
+            Type bindingContextType,
+            AttachedLongPressCommandAttribute commandAttr)
+        {
+            var method = bindingContextType
+                .GetMethod(commandAttr.CommandDelegateName);
+
+            var canExecuteMethod = bindingContextType
+                .GetMethod(commandAttr.CommandCanExecuteDelegateName);
+
+            var command = new RelayCommand<object>(
+                obj => _ = method.GetParameters().Length <= 0
+                    ? method.Invoke(bindingContext, new object[] { })
+                    : method.Invoke(bindingContext, new object[] { obj }),
+                () => canExecuteMethod == default
+                    || (bool)canExecuteMethod.Invoke(bindingContext, new object[0]));
+
+            TouchEffect.SetLongPressCommand(control, command);
+            TouchEffect.SetLongPressDuration(control, commandAttr.LongPressDuration);
+            TouchEffect.SetNativeAnimation(control, commandAttr.NativeAnimation);
+            TouchEffect.SetHoveredAnimationDuration(control, commandAttr.HoveredAnimationDuration);
+            TouchEffect.SetNormalAnimationDuration(control, commandAttr.NormalAnimationDuration);
+            TouchEffect.SetPressedAnimationDuration(control, commandAttr.PressedAnimationDuration);
         }
 
         private static void AssignAttachedAsyncCommand(
@@ -185,16 +280,48 @@ namespace AppHosting.Xamarin.Forms.Extensions
                 .GetMethod(commandAttr.CommandCanExecuteDelegateName);
 
             var command = new AsyncRelayCommand<object>(
-                obj => method.GetParameters().Count() <= 0
+                obj => method.GetParameters().Length <= 0
                     ? (Task)method.Invoke(bindingContext, new object[] { })
                     : (Task)method.Invoke(bindingContext, new object[] { obj }),
-                canExecute: obj => canExecuteMethod != default
-                    ? (bool)canExecuteMethod.Invoke(bindingContext, new object[0])
-                    : true,
+                canExecute: obj => canExecuteMethod == default
+                    || (bool)canExecuteMethod.Invoke(bindingContext, new object[0]),
                 onException: obj => exceptionMethod?.Invoke(bindingContext, new object[] { obj }),
                 continueOnCapturedContext: commandAttr.ContinueOnCapturedContext);
 
-            Commands.SetTap(control, command);
+            TouchEffect.SetCommand(control, command);
+            TouchEffect.SetNativeAnimation(control, commandAttr.NativeAnimation);
+            TouchEffect.SetHoveredAnimationDuration(control, commandAttr.HoveredAnimationDuration);
+            TouchEffect.SetNormalAnimationDuration(control, commandAttr.NormalAnimationDuration);
+        }
+
+        private static void AssignAttachedAsyncLongPressCommand(
+            BindableObject control, object bindingContext,
+            Type bindingContextType,
+            AttachedAsyncLongPressCommandAttribute commandAttr)
+        {
+            var method = bindingContextType
+                .GetMethod(commandAttr.CommandDelegateName);
+
+            var exceptionMethod = bindingContextType
+                .GetMethod(commandAttr.OnException);
+
+            var canExecuteMethod = bindingContextType
+                .GetMethod(commandAttr.CommandCanExecuteDelegateName);
+
+            var command = new AsyncRelayCommand<object>(
+                obj => method.GetParameters().Length <= 0
+                    ? (Task)method.Invoke(bindingContext, new object[] { })
+                    : (Task)method.Invoke(bindingContext, new object[] { obj }),
+                canExecute: obj => canExecuteMethod == default
+                    || (bool)canExecuteMethod.Invoke(bindingContext, new object[0]),
+                onException: obj => exceptionMethod?.Invoke(bindingContext, new object[] { obj }),
+                continueOnCapturedContext: commandAttr.ContinueOnCapturedContext);
+
+            TouchEffect.SetLongPressCommand(control, command);
+            TouchEffect.SetNativeAnimation(control, commandAttr.NativeAnimation);
+            TouchEffect.SetHoveredAnimationDuration(control, commandAttr.HoveredAnimationDuration);
+            TouchEffect.SetNormalAnimationDuration(control, commandAttr.NormalAnimationDuration);
+            TouchEffect.SetPressedAnimationDuration(control, commandAttr.PressedAnimationDuration);
         }
 
         private static void AssignCommand(
@@ -211,12 +338,11 @@ namespace AppHosting.Xamarin.Forms.Extensions
                     .GetMethod(commandAttr.CommandCanExecuteDelegateName);
 
                 var command = new RelayCommand<object>(
-                    obj => _ = method.GetParameters().Count() <= 0
+                    obj => _ = method.GetParameters().Length <= 0
                         ? method.Invoke(bindingContext, new object[] { })
                         : method.Invoke(bindingContext, new object[] { obj }),
-                    () => canExecuteMethod != default
-                        ? (bool)canExecuteMethod.Invoke(bindingContext, new object[0])
-                        : true);
+                    () => canExecuteMethod == default
+                        || (bool)canExecuteMethod.Invoke(bindingContext, new object[0]));
 
                 commandProp.SetValue(control, command);
             }
@@ -239,12 +365,11 @@ namespace AppHosting.Xamarin.Forms.Extensions
                     .GetMethod(commandAttr.CommandCanExecuteDelegateName);
 
                 var command = new AsyncRelayCommand<object>(
-                    obj => method.GetParameters().Count() <= 0
+                    obj => method.GetParameters().Length <= 0
                         ? (Task)method.Invoke(bindingContext, new object[] { })
                         : (Task)method.Invoke(bindingContext, new object[] { obj }),
-                    canExecute: obj => canExecuteMethod != default
-                        ? (bool)canExecuteMethod.Invoke(bindingContext, new object[0])
-                        : true,
+                    canExecute: obj => canExecuteMethod == default
+                        || (bool)canExecuteMethod.Invoke(bindingContext, new object[0]),
                     onException: obj => exceptionMethod?.Invoke(bindingContext, new object[] { obj }),
                     continueOnCapturedContext: commandAttr.ContinueOnCapturedContext);
 

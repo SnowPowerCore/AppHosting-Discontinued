@@ -41,6 +41,18 @@ namespace AppHosting.Xamarin.Forms.Extensions
                 : commandAttrs;
         }
 
+        public static AttachedLongPressCommandAttribute[] GetElementAttachedLongPressCommandAttributes(this Element xfElement)
+        {
+            var commandAttrs = (AttachedLongPressCommandAttribute[])Attribute.GetCustomAttributes(
+                xfElement.GetType(),
+                typeof(AttachedLongPressCommandAttribute),
+                true);
+
+            return commandAttrs is default(AttachedLongPressCommandAttribute[])
+                ? Array.Empty<AttachedLongPressCommandAttribute>()
+                : commandAttrs;
+        }
+
         public static AsyncCommandAttribute[] GetElementAsyncCommandAttributes(this Element xfElement)
         {
             var commandAttrs = (AsyncCommandAttribute[])Attribute.GetCustomAttributes(
@@ -62,6 +74,18 @@ namespace AppHosting.Xamarin.Forms.Extensions
 
             return commandAttrs is default(AttachedAsyncCommandAttribute[])
                 ? Array.Empty<AttachedAsyncCommandAttribute>()
+                : commandAttrs;
+        }
+
+        public static AttachedAsyncLongPressCommandAttribute[] GetElementAttachedAsyncLongPressCommandAttributes(this Element xfElement)
+        {
+            var commandAttrs = (AttachedAsyncLongPressCommandAttribute[])Attribute.GetCustomAttributes(
+                xfElement.GetType(),
+                typeof(AttachedAsyncLongPressCommandAttribute),
+                true);
+
+            return commandAttrs is default(AttachedAsyncLongPressCommandAttribute[])
+                ? Array.Empty<AttachedAsyncLongPressCommandAttribute>()
                 : commandAttrs;
         }
 

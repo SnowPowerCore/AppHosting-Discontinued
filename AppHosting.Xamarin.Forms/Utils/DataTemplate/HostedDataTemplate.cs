@@ -18,12 +18,16 @@ namespace AppHosting.Xamarin.Forms.Utils.DataTemplate
                 var commandAttrs = xfElement.GetElementCommandAttributes();
                 var asyncCommandAttrs = xfElement.GetElementAsyncCommandAttributes();
                 var attachedCommandAttrs = xfElement.GetElementAttachedCommandAttributes();
+                var attachedLongPressCommandAttrs = xfElement.GetElementAttachedLongPressCommandAttributes();
                 var attachedAsyncCommandAttrs = xfElement.GetElementAttachedAsyncCommandAttributes();
+                var attachedAsyncLongPressCommandAttrs = xfElement.GetElementAttachedAsyncLongPressCommandAttributes();
 
                 var parentBindingContext = typeWrapper.Parent.BindingContext;
                 data = xfElement
                     .AddAttachedAsyncCommands(attachedAsyncCommandAttrs, parentBindingContext)
                     .AddAttachedCommands(attachedCommandAttrs, parentBindingContext)
+                    .AddAttachedAsyncLongPressCommands(attachedAsyncLongPressCommandAttrs, parentBindingContext)
+                    .AddAttachedLongPressCommands(attachedLongPressCommandAttrs, parentBindingContext)
                     .AddAsyncCommands(asyncCommandAttrs, parentBindingContext)
                     .AddCommands(commandAttrs, parentBindingContext);
             }

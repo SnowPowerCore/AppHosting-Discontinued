@@ -1,4 +1,4 @@
-﻿namespace System.Runtime.CompilerServices
+﻿namespace AppHosting.Abstractions.Properties
 {
     public class IsExternalInit { }
 }
