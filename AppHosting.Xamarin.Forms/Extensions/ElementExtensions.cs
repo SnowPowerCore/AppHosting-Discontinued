@@ -134,7 +134,7 @@ namespace AppHosting.Xamarin.Forms.Extensions
                 bindingContextType ??= differentBindingContext?.GetType();
 
                 AssignCommandParameter(
-                    desiredControl, desiredControlType, bindingContextType, commandAttr);
+                    desiredControl, xfElement.BindingContext ?? differentBindingContext, desiredControlType, commandAttr);
 
                 AssignCommand(
                     desiredControl, xfElement.BindingContext ?? differentBindingContext,
@@ -160,7 +160,7 @@ namespace AppHosting.Xamarin.Forms.Extensions
                 bindingContextType ??= differentBindingContext?.GetType();
 
                 AssignCommandParameter(
-                    desiredControl, desiredControlType, bindingContextType, commandAttr);
+                    desiredControl, xfElement.BindingContext ?? differentBindingContext, desiredControlType, commandAttr);
 
                 AssignAsyncCommand(
                     desiredControl, xfElement.BindingContext ?? differentBindingContext,
@@ -175,12 +175,9 @@ namespace AppHosting.Xamarin.Forms.Extensions
         {
             if (!string.IsNullOrEmpty(commandAttr.CommandObjectName))
             {
-                var binding = new Binding(
-                    commandAttr.CommandObjectName,
-                    BindingMode.TwoWay,
-                    source: bindingContext);
-
-                control.SetBinding(TouchEffect.CommandParameterProperty, binding);
+                var binding = CreateCommandParameterBinding(control, bindingContext, commandAttr);
+                if (binding is not default(Binding))
+                    control.SetBinding(TouchEffect.CommandParameterProperty, binding);
             }
         }
 
@@ -189,29 +186,22 @@ namespace AppHosting.Xamarin.Forms.Extensions
         {
             if (!string.IsNullOrEmpty(commandAttr.CommandObjectName))
             {
-                var binding = new Binding(
-                    commandAttr.CommandObjectName,
-                    BindingMode.TwoWay,
-                    source: bindingContext);
-
-                control.SetBinding(TouchEffect.LongPressCommandParameterProperty, binding);
+                var binding = CreateCommandParameterBinding(control, bindingContext, commandAttr);
+                if (binding is not default(Binding))
+                    control.SetBinding(TouchEffect.LongPressCommandParameterProperty, binding);
             }
         }
 
         private static void AssignCommandParameter(
-            BindableObject control, Type controlType, Type bindingContextType, CommandAttribute commandAttr)
+            BindableObject control, object bindingContext, Type controlType, CommandAttribute commandAttr)
         {
-            if (controlType.GetProperty("CommandParameter") is not null)
+            if (controlType.GetProperty("CommandParameter") is not default(PropertyInfo))
             {
-                var @object = bindingContextType
-                    .GetProperty(commandAttr.CommandObjectName);
-
-                if (@object != default)
-                {
+                var binding = CreateCommandParameterBinding(control, bindingContext, commandAttr);
+                if (binding is not default(Binding))
                     control.SetBinding(
                         (BindableProperty)controlType.GetField("CommandParameterProperty").GetValue(control),
-                        commandAttr.CommandObjectName);
-                }
+                        binding);
             }
         }
 
@@ -226,12 +216,7 @@ namespace AppHosting.Xamarin.Forms.Extensions
             var canExecuteMethod = bindingContextType
                 .GetMethod(commandAttr.CommandCanExecuteDelegateName);
 
-            var command = new RelayCommand<object>(
-                obj => _ = method.GetParameters().Length <= 0
-                    ? method.Invoke(bindingContext, new object[] { })
-                    : method.Invoke(bindingContext, new object[] { obj }),
-                () => canExecuteMethod == default
-                    || (bool)canExecuteMethod.Invoke(bindingContext, new object[0]));
+            var command = CreateRelayCommand(bindingContext, method, canExecuteMethod);
 
             TouchEffect.SetCommand(control, command);
             TouchEffect.SetNativeAnimation(control, commandAttr.NativeAnimation);
@@ -250,12 +235,7 @@ namespace AppHosting.Xamarin.Forms.Extensions
             var canExecuteMethod = bindingContextType
                 .GetMethod(commandAttr.CommandCanExecuteDelegateName);
 
-            var command = new RelayCommand<object>(
-                obj => _ = method.GetParameters().Length <= 0
-                    ? method.Invoke(bindingContext, new object[] { })
-                    : method.Invoke(bindingContext, new object[] { obj }),
-                () => canExecuteMethod == default
-                    || (bool)canExecuteMethod.Invoke(bindingContext, new object[0]));
+            var command = CreateRelayCommand(bindingContext, method, canExecuteMethod);
 
             TouchEffect.SetLongPressCommand(control, command);
             TouchEffect.SetLongPressDuration(control, commandAttr.LongPressDuration);
@@ -279,14 +259,7 @@ namespace AppHosting.Xamarin.Forms.Extensions
             var canExecuteMethod = bindingContextType
                 .GetMethod(commandAttr.CommandCanExecuteDelegateName);
 
-            var command = new AsyncRelayCommand<object>(
-                obj => method.GetParameters().Length <= 0
-                    ? (Task)method.Invoke(bindingContext, new object[] { })
-                    : (Task)method.Invoke(bindingContext, new object[] { obj }),
-                canExecute: obj => canExecuteMethod == default
-                    || (bool)canExecuteMethod.Invoke(bindingContext, new object[0]),
-                onException: obj => exceptionMethod?.Invoke(bindingContext, new object[] { obj }),
-                continueOnCapturedContext: commandAttr.ContinueOnCapturedContext);
+            var command = CreateAsyncRelayCommand(bindingContext, method, canExecuteMethod, exceptionMethod, commandAttr.ContinueOnCapturedContext);
 
             TouchEffect.SetCommand(control, command);
             TouchEffect.SetNativeAnimation(control, commandAttr.NativeAnimation);
@@ -308,14 +281,7 @@ namespace AppHosting.Xamarin.Forms.Extensions
             var canExecuteMethod = bindingContextType
                 .GetMethod(commandAttr.CommandCanExecuteDelegateName);
 
-            var command = new AsyncRelayCommand<object>(
-                obj => method.GetParameters().Length <= 0
-                    ? (Task)method.Invoke(bindingContext, new object[] { })
-                    : (Task)method.Invoke(bindingContext, new object[] { obj }),
-                canExecute: obj => canExecuteMethod == default
-                    || (bool)canExecuteMethod.Invoke(bindingContext, new object[0]),
-                onException: obj => exceptionMethod?.Invoke(bindingContext, new object[] { obj }),
-                continueOnCapturedContext: commandAttr.ContinueOnCapturedContext);
+            var command = CreateAsyncRelayCommand(bindingContext, method, canExecuteMethod, exceptionMethod, commandAttr.ContinueOnCapturedContext);
 
             TouchEffect.SetLongPressCommand(control, command);
             TouchEffect.SetNativeAnimation(control, commandAttr.NativeAnimation);
@@ -336,13 +302,7 @@ namespace AppHosting.Xamarin.Forms.Extensions
 
                 var canExecuteMethod = bindingContextType
                     .GetMethod(commandAttr.CommandCanExecuteDelegateName);
-
-                var command = new RelayCommand<object>(
-                    obj => _ = method.GetParameters().Length <= 0
-                        ? method.Invoke(bindingContext, new object[] { })
-                        : method.Invoke(bindingContext, new object[] { obj }),
-                    () => canExecuteMethod == default
-                        || (bool)canExecuteMethod.Invoke(bindingContext, new object[0]));
+                RelayCommand<object> command = CreateRelayCommand(bindingContext, method, canExecuteMethod);
 
                 commandProp.SetValue(control, command);
             }
@@ -364,17 +324,59 @@ namespace AppHosting.Xamarin.Forms.Extensions
                 var canExecuteMethod = bindingContextType
                     .GetMethod(commandAttr.CommandCanExecuteDelegateName);
 
-                var command = new AsyncRelayCommand<object>(
-                    obj => method.GetParameters().Length <= 0
-                        ? (Task)method.Invoke(bindingContext, new object[] { })
-                        : (Task)method.Invoke(bindingContext, new object[] { obj }),
-                    canExecute: obj => canExecuteMethod == default
-                        || (bool)canExecuteMethod.Invoke(bindingContext, new object[0]),
-                    onException: obj => exceptionMethod?.Invoke(bindingContext, new object[] { obj }),
-                    continueOnCapturedContext: commandAttr.ContinueOnCapturedContext);
+                var command = CreateAsyncRelayCommand(bindingContext, method, canExecuteMethod, exceptionMethod, commandAttr.ContinueOnCapturedContext);
 
                 commandProp.SetValue(control, command);
             }
         }
+
+        private static Binding CreateCommandParameterBinding(BindableObject control, object bindingContext, CommandAttribute commandAttr)
+        {
+            if (string.IsNullOrEmpty(commandAttr.CommandObjectName))
+                return default;
+
+            if (commandAttr.CommandObjectName.Equals(".", StringComparison.OrdinalIgnoreCase))
+                return new Binding(
+                    Binding.SelfPath,
+                    commandAttr.ParameterBindingMode,
+                    source: control.BindingContext);
+
+            return new Binding(
+                commandAttr.CommandObjectName,
+                commandAttr.ParameterBindingMode,
+                source: bindingContext);
+        }
+
+        private static RelayCommand<object> CreateRelayCommand(object bindingContext, MethodInfo method, MethodInfo canExecuteMethod) =>
+            new(obj => _ = method.GetParameters().Length <= 0
+                    ? method.Invoke(bindingContext, new object[] { })
+                    : method.Invoke(bindingContext, new object[] { obj }),
+                obj =>
+                {
+                    if (canExecuteMethod is not default(MethodInfo))
+                    {
+                        return canExecuteMethod.GetParameters().Length <= 0
+                            ? (bool)canExecuteMethod.Invoke(bindingContext, new object[0])
+                            : (bool)canExecuteMethod.Invoke(bindingContext, new object[] { obj });
+                    }
+                    return true;
+                });
+
+        private static AsyncRelayCommand<object> CreateAsyncRelayCommand(object bindingContext, MethodInfo method, MethodInfo canExecuteMethod, MethodInfo exceptionMethod, bool continueOnCapturedContext) =>
+            new(obj => method.GetParameters().Length <= 0
+                    ? (Task)method.Invoke(bindingContext, new object[] { })
+                    : (Task)method.Invoke(bindingContext, new object[] { obj }),
+                obj =>
+                {
+                    if (canExecuteMethod is not default(MethodInfo))
+                    {
+                        return canExecuteMethod.GetParameters().Length <= 0
+                            ? (bool)canExecuteMethod.Invoke(bindingContext, new object[0])
+                            : (bool)canExecuteMethod.Invoke(bindingContext, new object[] { obj });
+                    }
+                    return true;
+                },
+                onException: e => exceptionMethod?.Invoke(bindingContext, new object[] { e }),
+                continueOnCapturedContext: continueOnCapturedContext);
     }
 }

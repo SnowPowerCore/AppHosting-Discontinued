@@ -15,7 +15,7 @@ namespace AppHosting.Xamarin.Forms.Utils.Commands
     public abstract class BaseCommand<TCanExecute>
     {
         private readonly Func<TCanExecute, bool> _canExecute;
-        private readonly WeakEventManager _weakEventManager = new WeakEventManager();
+        private readonly WeakEventManager _weakEventManager = new();
         protected long _isExecuting;
 
         /// <summary>

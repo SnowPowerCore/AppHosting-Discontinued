@@ -1,4 +1,5 @@
 ﻿using System;
+using Xamarin.Forms;
 
 namespace AppHosting.Xamarin.Forms.Attributes
 {
@@ -24,6 +25,8 @@ namespace AppHosting.Xamarin.Forms.Attributes
 
         public int NormalAnimationDuration { get; }
 
+        public BindingMode ParameterBindingMode { get; }
+
         public CommandAttribute(
             string commandDelegateName,
             string commandName = "Command",
@@ -32,7 +35,8 @@ namespace AppHosting.Xamarin.Forms.Attributes
             string commandCanExecuteDelegateName = "",
             bool nativeAnimation = false,
             int hoveredAnimationDuration = 500,
-            int normalAnimationDuration = 100)
+            int normalAnimationDuration = 100,
+            BindingMode parameterBindingMode = BindingMode.OneTime)
         {
             ControlName = controlName;
             CommandDelegateName = commandDelegateName;
@@ -42,6 +46,7 @@ namespace AppHosting.Xamarin.Forms.Attributes
             NativeAnimation = nativeAnimation;
             HoveredAnimationDuration = hoveredAnimationDuration;
             NormalAnimationDuration = normalAnimationDuration;
+            ParameterBindingMode = parameterBindingMode;
         }
     }
 
@@ -58,14 +63,16 @@ namespace AppHosting.Xamarin.Forms.Attributes
             string commandCanExecuteDelegateName = "",
             bool nativeAnimation = false,
             int hoveredAnimationDuration = 500,
-            int normalAnimationDuration = 100)
+            int normalAnimationDuration = 100,
+            BindingMode parameterBindingMode = BindingMode.OneTime)
             : base(commandDelegateName,
                    controlName: controlName,
                    commandObjectName: commandObjectName,
                    commandCanExecuteDelegateName: commandCanExecuteDelegateName,
                    nativeAnimation: nativeAnimation,
                    hoveredAnimationDuration: hoveredAnimationDuration,
-                   normalAnimationDuration: normalAnimationDuration)
+                   normalAnimationDuration: normalAnimationDuration,
+                   parameterBindingMode: parameterBindingMode)
         { }
     }
 
@@ -88,14 +95,16 @@ namespace AppHosting.Xamarin.Forms.Attributes
             bool nativeAnimation = false,
             int hoveredAnimationDuration = 500,
             int normalAnimationDuration = 100,
-            int pressedAnimationDuration = 100)
+            int pressedAnimationDuration = 100,
+            BindingMode parameterBindingMode = BindingMode.OneTime)
             : base(commandDelegateName,
                    controlName: controlName,
                    commandObjectName: commandObjectName,
                    commandCanExecuteDelegateName: commandCanExecuteDelegateName,
                    nativeAnimation: nativeAnimation,
                    hoveredAnimationDuration: hoveredAnimationDuration,
-                   normalAnimationDuration: normalAnimationDuration)
+                   normalAnimationDuration: normalAnimationDuration,
+                   parameterBindingMode: parameterBindingMode)
         {
             LongPressDuration = longPressDuration;
             PressedAnimationDuration = pressedAnimationDuration;
@@ -122,12 +131,14 @@ namespace AppHosting.Xamarin.Forms.Attributes
             string onException = "",
             bool nativeAnimation = false,
             int hoveredAnimationDuration = 500,
-            int normalAnimationDuration = 100)
+            int normalAnimationDuration = 100,
+            BindingMode parameterBindingMode = BindingMode.OneTime)
             : base(commandTaskName, commandName, controlName,
                    commandObjectName, commandCanExecuteDelegateName,
                    nativeAnimation: nativeAnimation,
                    hoveredAnimationDuration: hoveredAnimationDuration,
-                   normalAnimationDuration: normalAnimationDuration)
+                   normalAnimationDuration: normalAnimationDuration,
+                   parameterBindingMode: parameterBindingMode)
         {
             ContinueOnCapturedContext = continueOnCapturedContext;
             OnException = onException;
@@ -149,7 +160,8 @@ namespace AppHosting.Xamarin.Forms.Attributes
             string onException = "",
             bool nativeAnimation = false,
             int hoveredAnimationDuration = 500,
-            int normalAnimationDuration = 100)
+            int normalAnimationDuration = 100,
+            BindingMode parameterBindingMode = BindingMode.OneTime)
             : base(commandTaskName,
                    controlName: controlName,
                    commandObjectName: commandObjectName,
@@ -158,7 +170,8 @@ namespace AppHosting.Xamarin.Forms.Attributes
                    onException: onException,
                    nativeAnimation: nativeAnimation,
                    hoveredAnimationDuration: hoveredAnimationDuration,
-                   normalAnimationDuration: normalAnimationDuration)
+                   normalAnimationDuration: normalAnimationDuration,
+                   parameterBindingMode: parameterBindingMode)
         { }
     }
 
@@ -183,7 +196,8 @@ namespace AppHosting.Xamarin.Forms.Attributes
             bool nativeAnimation = false,
             int hoveredAnimationDuration = 500,
             int normalAnimationDuration = 100,
-            int pressedAnimationDuration = 100)
+            int pressedAnimationDuration = 100,
+            BindingMode parameterBindingMode = BindingMode.OneTime)
             : base(commandTaskName,
                    controlName: controlName,
                    commandObjectName: commandObjectName,
@@ -192,7 +206,8 @@ namespace AppHosting.Xamarin.Forms.Attributes
                    onException: onException,
                    nativeAnimation: nativeAnimation,
                    hoveredAnimationDuration: hoveredAnimationDuration,
-                   normalAnimationDuration: normalAnimationDuration)
+                   normalAnimationDuration: normalAnimationDuration,
+                   parameterBindingMode: parameterBindingMode)
         {
             LongPressDuration = longPressDuration;
             PressedAnimationDuration = pressedAnimationDuration;

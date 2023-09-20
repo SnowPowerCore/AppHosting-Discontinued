@@ -4,7 +4,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <LangVersion>9.0</LangVersion>
-    <Version>0.9.1.1</Version>
+    <Version>0.9.2.0</Version>
     <Authors>Nikita</Authors>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>

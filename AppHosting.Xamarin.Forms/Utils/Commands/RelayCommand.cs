@@ -21,7 +21,7 @@ namespace AppHosting.Xamarin.Forms.Utils.Commands
         /// </summary>
         /// <param name="execute">The execution logic.</param>
         /// <param name="canExecute">The execution status logic.</param>
-        public BaseRelayCommand(Action<T> execute, Func<bool> canExecute) : base(_ => canExecute())
+        public BaseRelayCommand(Action<T> execute, Func<T, bool> canExecute) : base(canExecute)
         {
             if (execute == null)
                 throw new ArgumentNullException("execute");
@@ -72,7 +72,7 @@ namespace AppHosting.Xamarin.Forms.Utils.Commands
         /// </summary>
         /// <param name="execute">The execution logic.</param>
         /// <param name="canExecute">The execution status logic.</param>
-        public RelayCommand(Action execute, Func<bool> canExecute)
+        public RelayCommand(Action execute, Func<object, bool> canExecute)
             : base(obj => execute?.Invoke(), canExecute) { }
     }
 
@@ -90,7 +90,7 @@ namespace AppHosting.Xamarin.Forms.Utils.Commands
         /// </summary>
         /// <param name="execute">The execution logic.</param>
         /// <param name="canExecute">The execution status logic.</param>
-        public RelayCommand(Action<T> execute, Func<bool> canExecute)
+        public RelayCommand(Action<T> execute, Func<T, bool> canExecute)
             : base(execute, canExecute) { }
     }
 #nullable disable

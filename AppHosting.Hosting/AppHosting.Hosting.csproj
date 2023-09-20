@@ -5,7 +5,7 @@
     <LangVersion>9.0</LangVersion>
     <AssemblyName>AppHosting.Hosting</AssemblyName>
     <RootNamespace>AppHosting.Hosting</RootNamespace>
-    <Version>0.9.1.1</Version>
+    <Version>0.9.2.0</Version>
     <Authors>Nikita</Authors>
     <Description>Closest ASP.NET Core implementation for Xamarin.Forms
 Please, head to the project's repository for wiki.</Description>
@@ -16,8 +16,8 @@ Please, head to the project's repository for wiki.</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AppHosting.Abstractions" Version="0.9.1.1" />
-    <PackageReference Include="AppHosting.Xamarin.Forms.Abstractions" Version="0.9.1.1" />
+    <PackageReference Include="AppHosting.Abstractions" Version="0.9.2" />
+    <PackageReference Include="AppHosting.Xamarin.Forms.Abstractions" Version="0.9.2" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="7.0.11" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
   </ItemGroup>
