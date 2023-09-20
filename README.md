@@ -15,6 +15,8 @@ Visit the [wiki](https://github.com/SnowPowerCore/AppHosting/wiki) for step-by-s
 | AppHosting.Hosting         |  [![NuGet version (AppHosting.Hosting)](https://img.shields.io/nuget/v/AppHosting.Hosting.svg?style=flat-square)](https://www.nuget.org/packages/AppHosting.Hosting/)|
 | AppHosting.Xamarin.Forms.Abstractions | [![NuGet version (AppHosting.Xamarin.Forms.Abstractions)](https://img.shields.io/nuget/v/AppHosting.Xamarin.Forms.Abstractions.svg?style=flat-square)](https://www.nuget.org/packages/AppHosting.Xamarin.Forms.Abstractions/)|
 | AppHosting.Xamarin.Forms         |  [![NuGet version (AppHosting.Xamarin.Forms)](https://img.shields.io/nuget/v/AppHosting.Xamarin.Forms.svg?style=flat-square)](https://www.nuget.org/packages/AppHosting.Xamarin.Forms/)|
+| AppHosting.Xamarin.Forms.Android |  [![NuGet version (AppHosting.Xamarin.Forms.Android)](https://img.shields.io/nuget/v/AppHosting.Xamarin.Forms.Android.svg?style=flat-square)](https://www.nuget.org/packages/AppHosting.Xamarin.Forms.Android/)|
+| AppHosting.Xamarin.Forms.iOS |  [![NuGet version (AppHosting.Xamarin.Forms.iOS)](https://img.shields.io/nuget/v/AppHosting.Xamarin.Forms.iOS.svg?style=flat-square)](https://www.nuget.org/packages/AppHosting.Xamarin.Forms.iOS/)|
 
 # Contribution
 If you find any problem, bug or unexpected crash, feel free to open new issue here using `Github Issues` feature. If you wish, you can also create PRs to resolve an issue, suggest a better implementation or introduce a completely new feature.
