@@ -1,6 +1,6 @@
 [![made-by- net (1)](https://github.com/SnowPowerCore/.NET-Custom-Console-App-Template/assets/35460261/d97613a9-740d-4f08-a931-81b77cfffb36)](https://dot.net)
 
-# AppHosting
+# (Discontinued) AppHosting
 Closest .NET Core Hosting implementation for Xamarin.Forms built to deliver better architecture for your application.
 
 Visit the [wiki](https://github.com/SnowPowerCore/AppHosting/wiki) for step-by-step introduction and features description.
